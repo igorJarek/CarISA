@@ -9,22 +9,26 @@
 #include "Arduino.h"
 #include "Consts.h"
 
-class Encoders;
-extern Encoders encoders;
-
 class Encoders
 {
 	  public:
-        Encoders();
+        static Encoders & getInstance()
+        {
+            static Encoders instance;
+            return instance;  
+        }
+        
         uint32_t getLeftCount() { return encoderLeftCounter; }
         uint32_t getRightCount() { return encoderRightCounter; }
 
     private:
-      static void encoderLeftInterrupt();
-      static void encoderRightInterrupt();
-
-      uint32_t encoderLeftCounter = 0;
-      uint32_t encoderRightCounter = 0;
+        Encoders();
+        Encoders(const Encoders &);
+        static void encoderLeftInterrupt();
+        static void encoderRightInterrupt();
+  
+        uint32_t encoderLeftCounter = 0;
+        uint32_t encoderRightCounter = 0;
 };
 
 #endif // Encoders_h

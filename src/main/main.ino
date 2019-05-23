@@ -2,6 +2,7 @@
 #include "Encoder.h"
 
 Engines engines;
+Encoders& encoders = Encoders::getInstance();
 
 void setup() {
     Serial.begin(9600);

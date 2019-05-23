@@ -1,7 +1,5 @@
 #include "Encoder.h"
 
-Encoders encoders;
-
 Encoders::Encoders()
 {
     pinMode(ENCODER_LEFT, INPUT);
@@ -13,10 +11,10 @@ Encoders::Encoders()
 
 void Encoders::encoderLeftInterrupt()
 {
-    encoders.encoderLeftCounter++;
+    getInstance().encoderLeftCounter++;
 }
 
 void Encoders::encoderRightInterrupt()
 {
-    encoders.encoderRightCounter++;
+    getInstance().encoderRightCounter++;
 }
