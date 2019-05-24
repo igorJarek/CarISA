@@ -40,6 +40,11 @@ void Engines::stopSoft()
     setEngineState(currentSide, SOFT_STOP, MIN_SPEED);
 }
 
+void Engines::stopSoft(e_EngineSide side)
+{
+    setEngineState(side, SOFT_STOP, MIN_SPEED);
+}
+
 void Engines::stopImmediately()
 {
     setEngineState(currentSide, FAST_STOP, MAX_SPEED);

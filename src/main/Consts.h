@@ -7,8 +7,8 @@
 #define LEFT_IN2    46  // in2 (l298n)
 
 #define RIGHT_PWM   2
-#define RIGHT_IN1   45  // in3 (l298n) zamienione z IN2
-#define RIGHT_IN2   44  // in4 (l298n) zamienione z IN1
+#define RIGHT_IN1   44  // in3 (l298n)
+#define RIGHT_IN2   45  // in4 (l298n)
 
 // Encoders
 #define ENCODER_LEFT 	  50

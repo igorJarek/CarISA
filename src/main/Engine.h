@@ -32,13 +32,22 @@ class Engines
             MIN_SPEED = 0,
             MAX_SPEED = 0xFF
         };
+
+        static Engines& getInstance()
+        {
+            static Engines instance;
+            return instance;  
+        }
    
-        Engines();
 		    void accelerate(e_EngineSide side, e_EngineState state, uint8_t speed);
         void stopSoft();
+        void stopSoft(e_EngineSide side);
         void stopImmediately();
 
     private:
+        Engines();
+        Engines(const Engines &);
+        
         void setEngineState(e_EngineSide side, e_EngineState state, uint8_t speed);
         e_EngineSide currentSide;
 };

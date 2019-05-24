@@ -12,7 +12,7 @@
 class Encoders
 {
 	  public:
-        static Encoders & getInstance()
+        static Encoders& getInstance()
         {
             static Encoders instance;
             return instance;  
