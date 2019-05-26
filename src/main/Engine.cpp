@@ -49,3 +49,8 @@ void Engines::stopImmediately()
 {
     setEngineState(currentSide, FAST_STOP, MAX_SPEED);
 }
+
+void Engines::stopImmediately(e_EngineSide side)
+{
+    setEngineState(side, FAST_STOP, MAX_SPEED);
+}

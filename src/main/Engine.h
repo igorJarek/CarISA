@@ -43,6 +43,7 @@ class Engines
         void stopSoft();
         void stopSoft(e_EngineSide side);
         void stopImmediately();
+        void stopImmediately(e_EngineSide side);
 
     private:
         Engines();

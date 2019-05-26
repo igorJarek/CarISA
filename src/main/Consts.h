@@ -14,6 +14,9 @@
 #define ENCODER_LEFT 	  50
 #define ENCODER_RIGHT 	51
 
+// Compas
+#define COMPAS_RDY 52
+
 // Distance Meters
 #define US_FRONT_TRIGGER_PIN 	8
 #define US_FRONT_ECHO_PIN 		9
