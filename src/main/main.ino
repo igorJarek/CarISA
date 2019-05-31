@@ -6,99 +6,43 @@
 #define encoders Encoders::getInstance()
 #define compas Kompas::getInstance()
 
-const uint16_t encoderCount = 20;
+int16_t x = 0, y = 0;
 
-float oldAlpha;
-float newAlpha;
-float deltaAlpha;
-float avgAngle;
-float max = 0.0f;
-float min = 0.0f;
+// szybszy kompas tak chociaż 4ks/s
+// przy tym kompasie co mamy wybieramy jakosc pomiaru czy szybkosc działania układu
+
+// problem z usrednieniem w okolicach 0/360 stopni (czesc pomiarow ma wartosc bliska 360 a czesc bliska 0 stopni)
+// rozwiazanie 1 : arcus sinus
+// wady : zakres od -90 do 90 stopni - problemy z odejmowaniem
+// rozwiazanie 2 : sinus i cosinus
 
 void setup() 
 {
-    Serial1.begin(9600);
+    Serial.begin(115200);
 }
 
 void loop() 
-{
-    compas.measure();
-    oldAlpha = compas.getAngle();
-    compas.measure();
-    newAlpha = compas.getAngle();
-    deltaAlpha = newAlpha - oldAlpha;
-    max = deltaAlpha > max ? deltaAlpha : max;
-    min = deltaAlpha < min ? deltaAlpha : min;
-    avgAngle = (newAlpha + oldAlpha) / 2.0;
-    Serial1.println(max);
-    Serial1.println(min);
-    Serial1.println(avgAngle);
-    Serial1.println();
-  
-    /*engines.accelerate(SIDE_LEFT, FORWARD, 255);
-    engines.accelerate(SIDE_RIGHT, BACKWARD, 210);
+{   
+    compas.measure(x, y);
+    char bufx[] = {(x >> 8) & 0xFF, x & 0xFF};
+    char bufy[] = {(y >> 8) & 0xFF, y & 0xFF};
+    Serial.write(bufx, 2);
+    Serial.write(bufy, 2);
     
-    float oldAlpha;
-    float newAlpha;
-    float deltaAlpha;
-    float sumAlpha=0;
-
-    compas.measure();
-    oldAlpha = compas.getAngle();
+    /*float startAngle = compas.avgRadian(200);
+    float currAngle, deltaAngle;
+  
+    engines.accelerate(SIDE_LEFT, FORWARD, 128);
+    engines.accelerate(SIDE_RIGHT, BACKWARD, 128);
 
     do
     {
-        compas.measure();
-        newAlpha = compas.getAngle();
-    
-        deltaAlpha = abs(newAlpha - oldAlpha);
-        if(deltaAlpha >= 180.0)
-            deltaAlpha = 360.0 - deltaAlpha;
-      
-        sumAlpha += deltaAlpha;
-        Serial1.println(sumAlpha);
+       currAngle = compas.avgRadian(10);
+       deltaAngle = fabs(startAngle - currAngle);
+       Serial1.println(deltaAngle);
     }
-    while(abs(sumAlpha) <= 90.0);
+    while(deltaAngle <= HALF_PI / 2.0);
     
-    engines.stopImmediately(SIDE_RIGHT);
-    engines.stopImmediately(SIDE_LEFT);
-    
-    delay(1000);*/
-
-  
-    /*engines.accelerate(SIDE_BOTH, FORWARD, Engines::MAX_SPEED);
-    uint16_t startCount = encoders.getLeftCount();
-    while(encoders.getLeftCount() - startCount <= encoderCount);
-    engines.stopSoft();
-    delay(1000);
-    engines.accelerate(SIDE_LEFT, FORWARD, 255);
-    engines.accelerate(SIDE_RIGHT, BACKWARD, 210);
-    
-    float oldAlpha;
-    float newAlpha;
-    float deltaAlpha;
-    float sumAlpha=0;
-
-    compas.measure();
-    oldAlpha = compas.getAngle();
-
-    do
-    {
-        compas.measure();
-        newAlpha = compas.getAngle();
-    
-        deltaAlpha = abs(newAlpha - oldAlpha);
-        if(deltaAlpha >= 180.0)
-            deltaAlpha = 360.0 - deltaAlpha;
-      
-        sumAlpha += deltaAlpha;
-        Serial1.println(sumAlpha);
-        oldAlpha = newAlpha;
-    }
-    while(abs(sumAlpha) <= 90.0);
-    
-    engines.stopSoft(SIDE_RIGHT);
-    engines.stopSoft(SIDE_LEFT);
-    
-    delay(1000);*/
+    engines.stopImmediately(SIDE_BOTH);
+    */
 }

@@ -3,7 +3,6 @@
 
 #include <Wire.h>
 
-// brak konfigurowalnych bitów w adresie
 #define QMC_ADDRESS    ((uint8_t)0x0D)
 
 #define OSR_512         ((uint8_t)0b00000000)
@@ -22,7 +21,6 @@
 #define MODE_STANDBY    ((uint8_t)0b00000000)
 #define MODE_CONTINOUS  ((uint8_t)0b00000001)
 
-
 class Kompas
 {
     public:
@@ -31,23 +29,20 @@ class Kompas
             static Kompas instance;
             return instance;  
         }
-   
-        void measure(void);
-        float azimuth(int16_t a,int16_t b);
-    
-        int16_t getX(void) { return this->x; }
-        int16_t getY(void) { return this->y; }
-        int16_t getZ(void) { return this->z; }
-        float getAngle() {return this->a; }
 
+        void measure(int16_t& x, int16_t& y);
+        float measureAngle();
+        float avgAngle(uint8_t samples);
+        double avgRadian(uint8_t samples);
+        
     private:
         Kompas();
         Kompas(const Kompas &);
+        
         void writeRegister(uint8_t reg, uint8_t value);
+        float azimuth(int16_t a,int16_t b);
         static void readyInterrupt();
          
-        int16_t x = 0, y = 0, z = 0;
-        float a = 0.0f;
         volatile bool readyState = false;
 };
 

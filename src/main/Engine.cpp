@@ -30,9 +30,15 @@ void Engines::setEngineState(e_EngineSide side, e_EngineState state, uint8_t spe
 
 void Engines::accelerate(e_EngineSide side, e_EngineState state, uint8_t speed)
 { 
-    // TODO: Add accelerate
     currentSide = side;
-    setEngineState(side, state, speed);
+    int delta = MAX_SPEED - speed;
+    int step = delta / 10;
+
+    for(int i = 0; i < 10; i++)
+    {
+        setEngineState(side, state, MAX_SPEED - (i * step));
+        delay(10);
+    }
 }
 
 void Engines::stopSoft()
