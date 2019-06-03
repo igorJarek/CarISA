@@ -13,7 +13,7 @@ Kompas::Kompas()
     delay(100);
     this->writeRegister(0x0B, 0x01);
     
-    uint8_t mode = MODE_CONTINOUS | ODR_10HZ | RNG_8G | OSR_512;
+    uint8_t mode = MODE_CONTINOUS | ODR_200HZ | RNG_8G | OSR_512;
     this->writeRegister(0x09, mode);
 }
 
@@ -53,6 +53,28 @@ void Kompas::measure(int16_t& x, int16_t& y)
     z |= (int16_t)(Wire.read() << 8);
 }
 
+void Kompas::avgMeasure(uint8_t samples, int16_t& x, int16_t& y)
+{
+    int16_t currX, currY;
+    int32_t sumX = 0, sumY = 0;
+    uint8_t calibrationIndex = 0;
+    
+    do
+    {
+        measure(currX, currY);
+        sumX += currX;
+        sumY += currY;
+        
+        calibrationIndex++;
+    }while(calibrationIndex < samples);
+   
+    sumX /= samples;
+    sumY /= samples;
+
+    x = sumX;
+    y = sumY;
+}
+
 float Kompas::measureAngle()
 {
     int16_t x, y;
@@ -76,10 +98,10 @@ float Kompas::avgAngle(uint8_t samples)
     return angle;
 }
 
-double Kompas::avgRadian(uint8_t samples)
+float Kompas::avgRadian(uint8_t samples)
 {
     int16_t x = 0, y = 0;
-    double sinus = 0.0f;
+    float sinus = 0.0f;
     uint8_t calibrationIndex = 0;
     
     do
@@ -89,7 +111,7 @@ double Kompas::avgRadian(uint8_t samples)
         calibrationIndex++;
     }while(calibrationIndex < samples);
    
-    sinus /= (double)samples;
+    sinus /= (float)samples;
     float radians = asin(sinus);
     return radians;
 }

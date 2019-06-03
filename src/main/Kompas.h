@@ -31,9 +31,10 @@ class Kompas
         }
 
         void measure(int16_t& x, int16_t& y);
+        void avgMeasure(uint8_t samples, int16_t& x, int16_t& y);
         float measureAngle();
         float avgAngle(uint8_t samples);
-        double avgRadian(uint8_t samples);
+        float avgRadian(uint8_t samples);
         
     private:
         Kompas();
