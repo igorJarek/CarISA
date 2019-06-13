@@ -5,6 +5,7 @@
 #define engines Engines::getInstance()
 #define encoders Encoders::getInstance()
 #define compas Kompas::getInstance()
+#define DEBUG_BLUETOOTH
 
 // szybszy kompas tak chociaż 4ks/s
 // przy tym kompasie co mamy wybieramy jakosc pomiaru czy szybkosc działania układu
@@ -19,7 +20,9 @@ void printValue(String s, float value)
 
 void setup() 
 {
+	#ifdef DEBUG_BLUETOOTH
     Serial1.begin(9600);
+	#endif
 }
 
 void loop() 
@@ -38,17 +41,19 @@ void loop()
 
     do
     {
-          currAngle =  compas.avgAngle(1);
-          deltaAngle = fabs(currAngle - startAngle);
-          if(deltaAngle > 180.0f)
+        currAngle =  compas.avgAngle(1);
+		deltaAngle = fabs(currAngle - startAngle);
+        if(deltaAngle > 180.0f)
             deltaAngle = 360.0 - deltaAngle;
 
-          Serial1.print(startAngle);
-          Serial1.print(" | ");
-          Serial1.print(currAngle);
-          Serial1.print(" | ");
-          Serial1.println(deltaAngle);
-          delay(100);
+		#ifdef DEBUG_BLUETOOTH
+		Serial1.print(startAngle);
+		Serial1.print(" | ");
+		Serial1.print(currAngle);
+		Serial1.print(" | ");
+		Serial1.println(deltaAngle);
+		delay(50);
+		#endif
     }
     while(deltaAngle < 90.0f);
     
