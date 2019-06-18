@@ -1,10 +1,12 @@
 #include "Engine.h"
 #include "Encoder.h"
 #include "Kompas.h"
+#include "UltrasonicSensor.h"
 
 #define engines Engines::getInstance()
 #define encoders Encoders::getInstance()
 #define compas Kompas::getInstance()
+#define sensors UltrasonicSensor::getInstance()
 #define DEBUG_BLUETOOTH
 
 // szybszy kompas tak chociaż 4ks/s
