@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "UltrasonicSensor.h"
 #include "Consts.h"
 
 UltrasonicSensor::UltrasonicSensor()
@@ -20,36 +21,39 @@ UltrasonicSensor::UltrasonicSensor()
 	digitalWrite(US_RIGHT_TRIGGER_PIN, 0);
 }
 
-int UltrasonicSensor::measureSoundSpeed(int trigger_pin, int echo_pin)
+uint16_t UltrasonicSensor::measureSoundSpeed(uint8_t trigger_pin, uint8_t echo_pin)
 {
-	digitalWrite(trigger_pin, false);
-	delayMicroseconds(2);
+  digitalWrite(trigger_pin, false);
+  delayMicroseconds(2);
+  
+  digitalWrite(trigger_pin, true);
+  delayMicroseconds(10);
+  digitalWrite(trigger_pin, false);
 
-	digitalWrite(trigger_pin, true);
-	delayMicroseconds(10);
-	digitalWrite(trigger_pin, false);
-
-	// zmierz czas przelotu fali dźwiękowej
-	int duration = pulseIn(echo_pin, true, 50 * 1000);
-
-	// przelicz czas na odległość (1/2 Vsound(t=20st.C))
-	int distance = (int)((float)duration * 0.03438f * 0.5f);
-	return distance;
+  // zmierz czas przelotu fali dźwiękowej
+  int duration = pulseIn(echo_pin, true, 50 * 1000);
+  
+  // przelicz czas na odległość (1/2 Vsound(t=20st.C))
+  int distance = (int)((float)duration * 0.03438f * 0.5f);
+  return distance;
 }
 
-int getFrontDist()
+uint16_t UltrasonicSensor::getDistance(e_UltrasonicSensor side)
 {
-	int d[5] = {};
-	int sum = 0;
-	int id = 0;
-		
-	int dist = measureSoundSpeed(ultrasound_trigger_pin[(int)sensor], ultrasound_echo_pin[(int)sensor]);
+    if(side == FRONT)
+        dist[side] = measureSoundSpeed(US_FRONT_TRIGGER_PIN, US_FRONT_ECHO_PIN);
+    else if(side == LEFT)
+        dist[side] = measureSoundSpeed(US_LEFT_TRIGGER_PIN, US_LEFT_ECHO_PIN);
+    else if(side == RIGHT)
+        dist[side] = measureSoundSpeed(US_RIGHT_TRIGGER_PIN, US_RIGHT_ECHO_PIN);
+    else if(side == BACK)
+        dist[side] = measureSoundSpeed(US_BACK_TRIGGER_PIN, US_BACK_ECHO_PIN);
+  
+    // średnia krocząca
+    sum[side] -= d[side][id[side]];
+    sum[side] += d[side][id[side]] = dist[side];
+    id[side] = (id[side] + 1) % 5;
+    dist[side] = sum[side] / 5;
 
-	// średnia krocząca
-	sum -= d[id];
-	sum += d[id] = dist;
-	id = (id + 1) % 5;
-	dist = sum / 5;
-
-	return dist;
+    return dist[side];
 }

@@ -1,6 +1,14 @@
 #ifndef ULTRASONIC_HPP
 #define ULTRASONIC_HPP
 
+enum e_UltrasonicSensor : uint8_t
+{
+    FRONT = 0,
+    LEFT  = 1,
+    RIGHT = 2,
+    BACK  = 3
+};
+
 class UltrasonicSensor
 {
     public:
@@ -10,13 +18,18 @@ class UltrasonicSensor
             return instance;  
         }
 
-        int getFrontDist();
+        uint16_t getDistance(e_UltrasonicSensor side);
         
     private:
         UltrasonicSensor();
         UltrasonicSensor(const UltrasonicSensor &);
         
-        int measureSoundSpeed(int trigger_pin, int echo_pin);
+        uint16_t measureSoundSpeed(uint8_t trigger_pin, uint8_t echo_pin);
+
+        uint16_t d[4][5] = {{0}};
+        uint16_t sum[4] = {0};
+        uint16_t id[4] = {0};
+        uint16_t dist[4] = {0};
 };
 
 #endif // ULTRASONIC_HPP
